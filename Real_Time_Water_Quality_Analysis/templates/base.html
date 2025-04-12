@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Water Quality Analysis System{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: #0077be;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .language-selector {
+            margin-right: 10px;
+        }
+        .navbar-brand img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        .settings-icon {
+            font-size: 1.2rem;
+            color: white;
+            transition: color 0.3s;
+        }
+        .settings-icon:hover {
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-tint"></i> Water Quality Analysis
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('water_quality') }}">Dashboard</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <div class="d-flex align-items-center">
+                    <select class="form-select language-selector" id="languageSelector">
+                        <option value="en">English</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="ta">தமிழ்</option>
+                    </select>
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('settings') }}" class="btn btn-outline-light me-2" title="Settings">
+                        <i class="fas fa-cog settings-icon"></i>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light me-2">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-light">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- ThingSpeak Configuration -->
+                    <div class="mb-4">
+                        <h6>ThingSpeak Configuration</h6>
+                        <form action="{{ url_for('update_thingspeak_config') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="channel_id" class="form-label">Channel ID</label>
+                                <input type="text" class="form-control" id="channel_id" name="channel_id" 
+                                       value="{{ current_user.thingspeak_channel_id or '' }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="read_api_key" class="form-label">Read API Key</label>
+                                <input type="text" class="form-control" id="read_api_key" name="read_api_key" 
+                                       value="{{ current_user.thingspeak_read_api_key or '' }}" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update ThingSpeak Configuration</button>
+                        </form>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div>
+                        <h6>Change Password</h6>
+                        <form action="{{ url_for('change_password') }}" method="POST">
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label">New Password</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Set initial language based on user preference
+            const userLang = '{{ current_user.preferred_language if current_user.is_authenticated else "en" }}';
+            $('#languageSelector').val(userLang);
+
+            // Handle language change
+            $('#languageSelector').change(function() {
+                const newLang = $(this).val();
+                $.post('/change_language', { language: newLang }, function(response) {
+                    location.reload();
+                });
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

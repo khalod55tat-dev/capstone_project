@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: water-quality-analysis
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.12
+      - key: DATABASE_URL
+        fromDatabase:
+          name: water_quality_db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_ENV
+        value: production
+
+databases:
+  - name: water_quality_db
+    databaseName: water_quality
+    plan: free 
