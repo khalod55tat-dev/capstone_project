@@ -6,7 +6,7 @@ services:
     buildCommand: |
       mkdir -p models static templates migrations
       pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: gunicorn wsgi:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.11
@@ -16,6 +16,8 @@ services:
           property: connectionString
       - key: FLASK_ENV
         value: production
+      - key: GUNICORN_CMD_ARGS
+        value: "--bind=0.0.0.0:$PORT --workers=4"
     disk:
       name: water-quality-data
       mountPath: /opt/render/project/src
