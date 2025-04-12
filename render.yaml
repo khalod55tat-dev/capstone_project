@@ -37,4 +37,4 @@ databases:
   - name: water_quality_db
     databaseName: water_quality
     plan: free
-    region: oregon 
+    region: oregon
