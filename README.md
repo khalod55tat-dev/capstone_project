@@ -1,36 +1,27 @@
+
 <!-- Global Ai buildathon -->
-# Updated for hackathon submission: 2025-08-23
+
+<h1 align="center">Water Quality Monitoring System</h1>
+
 <p align="center">
+   <b>🚀 Demo Video</b><br>
    <a href="https://youtu.be/PTA77FuBi7M" target="_blank">
-      <img src="https://img.youtube.com/vi/PTA77FuBi7M/0.jpg" alt="Watch the video" width="400"/>
+      <img src="https://img.youtube.com/vi/PTA77FuBi7M/0.jpg" alt="Demo Video" width="400"/>
    </a>
 </p>
 
 <p align="center">
-   <b>Product Idea</b><br>
+   <b>💡 Product Idea</b><br>
    <a href="https://youtube.com/shorts/_hkLWM1ThnI" target="_blank">
       <img src="https://img.youtube.com/vi/_hkLWM1ThnI/0.jpg" alt="Product Idea Video" width="400"/>
    </a>
 </p>
-<p align="center">
-   <img src="static/images/A_Product.jpg" alt="A_Product" width="400"/>
-</p>
-
-# Water Quality Monitoring System
-
-<p align="center">
-   <a href="https://youtu.be/PTA77FuBi7M" target="_blank">
-      <img src="https://img.youtube.com/vi/PTA77FuBi7M/0.jpg" alt="Watch the video" width="400"/>
-   </a>
-</p>
-
-<!-- For GitHub markdown, direct video embedding is not supported, but clicking the image will open the video. -->
 
 <p align="center">
    <img src="static/images/A_Product.jpg" alt="A_Product" width="400"/>
 </p>
 
-# Water Quality Monitoring System
+A Flask-based web application for real-time water quality monitoring and analysis using IoT sensors and machine learning.
 
 A Flask-based web application for real-time water quality monitoring and analysis using IoT sensors and machine learning.
 
