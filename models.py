@@ -1,3 +1,5 @@
+"""Global Ai buildathon"""
+# Updated for hackathon submission: 2025-08-23
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
