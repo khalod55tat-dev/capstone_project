@@ -1,3 +1,5 @@
+# Global Ai buildathon
+# Updated for hackathon submission: 2025-08-23
 import os
 
 port = int(os.getenv("PORT", 10000))

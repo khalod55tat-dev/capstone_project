@@ -1,3 +1,5 @@
+<!-- Global Ai buildathon -->
+# Updated for hackathon submission: 2025-08-23
 <p align="center">
    <a href="https://youtu.be/PTA77FuBi7M" target="_blank">
       <img src="https://img.youtube.com/vi/PTA77FuBi7M/0.jpg" alt="Watch the video" width="400"/>
