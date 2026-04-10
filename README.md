@@ -1,133 +1,243 @@
 
-<!-- Global Ai buildathon -->
+[README.md](https://github.com/user-attachments/files/26620126/README.md)
+# 🌊 Solar-Powered IoT Water Quality Monitoring and Advisory System
 
-<h1 align="center">Water Quality Monitoring System</h1>
+> **🏆 Winner — Best Theme Project (Communication Theme Award) | EECS2026 Capstone Showcase, UTM**
 
-<p align="center">
-   <b>🚀 Demo Video</b><br>
-   <a href="https://youtu.be/PTA77FuBi7M" target="_blank">
-      <img src="https://img.youtube.com/vi/PTA77FuBi7M/0.jpg" alt="Demo Video" width="400"/>
-   </a>
-</p>
+A portable, energy-independent water quality monitoring system built for off-grid and rural communities. The system combines solar power, multi-stage water purification, UV sterilization, and real-time IoT monitoring via an ESP32 microcontroller — all accessible through a web dashboard and mobile app.
 
-<p align="center">
-   <b>💡 Product Idea</b><br>
-   <a href="https://youtube.com/shorts/_hkLWM1ThnI" target="_blank">
-      <img src="https://img.youtube.com/vi/_hkLWM1ThnI/0.jpg" alt="Product Idea Video" width="400"/>
-   </a>
-</p>
+---
 
-<p align="center">
-   <img src="static/images/A_Product.jpg" alt="A_Product" width="400"/>
-</p>
+## 👥 Team — Group C2G04
 
-A Flask-based web application for real-time water quality monitoring and analysis using IoT sensors and machine learning.
+| Name | Role |
+|------|------|
+| Mohamad Harith Bin Azhar | Hardware & System Design |
+| Nazhan Ilham Bin Ahmad Zabidi | IoT & Embedded Systems |
+| Teoh Di Wei | Circuit & PCB Design |
+| Khalid Ahmed Elzubair Ahmed | Web Application & Backend |
 
-A Flask-based web application for real-time water quality monitoring and analysis using IoT sensors and machine learning.
+**Facilitator:** Dr. Nurul Ashikin Binti Daud  
+**Institution:** Universiti Teknologi Malaysia (UTM), Skudai, Johor  
+**Theme:** Affordable & Clean Energy (SDG 6 & SDG 7)
 
-## Features
+---
 
-- Real-time water quality parameter monitoring (pH, TDS, Turbidity)
-- Water Quality Index (WQI) calculation using both formula-based and ML approaches
-- Interactive data visualization
-- User authentication and authorization
-- Admin dashboard for system configuration
-- Integration with ThingSpeak IoT platform
-- Responsive web interface
+## 📌 Project Overview
 
-## Tech Stack
+Rural communities and outdoor enthusiasts often lack access to real-time water quality information. Existing solutions are either too expensive, not portable, or don't provide verified safety data. This system solves that by delivering:
 
-- **Backend**: Flask (Python)
-- **Database**: SQLite
-- **ML Framework**: scikit-learn
-- **Data Visualization**: Matplotlib, Seaborn
-- **Frontend**: HTML, CSS, JavaScript
-- **IoT Integration**: ThingSpeak API
+- **Real-time monitoring** of pH, Turbidity (NTU), and TDS (mg/L)
+- **Multi-stage purification** — sediment filtration + UV sterilization
+- **Solar-powered operation** with battery backup for off-grid use
+- **IoT web dashboard** with Water Quality Index (WQI), analysis reports, and email alerts
+- **Mobile app** via Blynk for instant notifications
 
-## Prerequisites
+---
 
-- Python 3.7+
-- pip (Python package manager)
-- Git
+## 🏗️ System Architecture
 
-## Installation
+The system has three integrated subsystems:
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd project
+```
+Solar Panel → Charge Controller → Battery → Solar Inverter → UV Sterilizer
+                                                    ↓
+Raw Water → Multistage Filter → UV Sterilizer → Purified Storage Tank
+                                                    ↓
+                              ESP32 ← pH / Turbidity / TDS Sensors
+                                ↓
+                    Wi-Fi → Blynk Server + ThingSpeak
+                                ↓
+                        Web Dashboard (Flask App)
 ```
 
-2. Install dependencies:
+---
+
+## ⚙️ Hardware Components
+
+| Component | Purpose |
+|-----------|---------|
+| ESP32 Microcontroller | Central processor, Wi-Fi, sensor reading |
+| pH Sensor (Pin 34) | Measures water acidity/alkalinity |
+| Turbidity Sensor (Pin 33) | Measures water clarity in NTU |
+| TDS Sensor (Pin 35) | Measures dissolved solids in mg/L |
+| 18V Solar Panel | Renewable energy source |
+| 10A Charge Controller | Battery charge regulation |
+| 12Ah Lead-Acid Battery | Energy storage & backup |
+| 220W Solar Inverter | DC to AC for UV sterilizer |
+| Multistage Water Filter | Physical filtration (sediment, carbon, UF) |
+| UV Light Sterilizer | Biological disinfection |
+| Solenoid Valve | Automated flow control |
+
+**Estimated Build Cost: ~RM 350** (vs. RM 1,200–3,500 for commercial alternatives)
+
+---
+
+## 🧠 ESP32 Firmware (`ESP32_water_quality.ino`)
+
+### How It Works
+
+The ESP32 firmware runs a continuous 20-second measurement cycle:
+
+1. Reads **pH** via averaged millivolt sampling (50 samples)
+2. Reads **Turbidity** via voltage-to-NTU mapping (50 samples)
+3. Reads **TDS** using polynomial calibration formula (20 samples)
+4. Sends all values to **Blynk** mobile dashboard (virtual pins V0–V4)
+5. Uploads data to **ThingSpeak** via HTTP GET request
+6. Displays countdown timer to next reading cycle
+
+### Sensor Calibration
+
+```cpp
+// pH calibration (linear)
+float PH_m = -9.44;
+float PH_b = 24.61;
+float ph = PH_m * Vph + PH_b;
+
+// Turbidity (voltage to NTU mapping)
+// V >= 2.40V → 0 NTU (clear), V <= 1.00V → 300 NTU (dirty)
+
+// TDS (polynomial, 3rd degree)
+float tds = (133.42 * Vtds³ - 255.86 * Vtds² + 857.39 * Vtds) * 0.5;
+```
+
+### Blynk Virtual Pin Mapping
+
+| Pin | Parameter |
+|-----|-----------|
+| V0 | pH value |
+| V1 | TDS (mg/L) |
+| V2 | Turbidity (NTU) |
+| V3 | Countdown to next cycle |
+| V4 | Status message |
+
+### Setup — Arduino IDE
+
+1. Install **Arduino IDE** and add ESP32 board support
+2. Install the following libraries via Library Manager:
+   - `Blynk` by Volodymyr Shymanskyy
+   - `HTTPClient` (built-in with ESP32)
+3. Open `ESP32_water_quality.ino`
+4. Update your credentials:
+
+```cpp
+// WiFi
+const char* WIFI_SSID = "YOUR_WIFI_NAME";
+const char* WIFI_PASS = "YOUR_WIFI_PASSWORD";
+
+// Blynk
+#define BLYNK_AUTH_TOKEN "YOUR_BLYNK_TOKEN"
+
+// ThingSpeak
+const char* TS_WRITE_KEY = "YOUR_THINGSPEAK_KEY";
+```
+
+5. Select board: `ESP32 Dev Module`
+6. Upload the sketch
+
+---
+
+## 🌐 Web Application (`website.py`)
+
+Built with **Python Flask**, the web dashboard provides:
+
+- Secure user login and registration
+- Real-time data retrieval from ThingSpeak API
+- **Water Quality Index (WQI)** calculation with grading (A/B/C)
+- Interactive bar charts and parameter visualizations (Matplotlib + Seaborn)
+- Parameter-specific analysis with recommendations and precautions
+- Email report generation (water quality summary with charts)
+- Multi-language support via Google Translate
+- Machine learning-based water quality predictions (scikit-learn)
+
+### Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python, Flask, Flask-Login, Flask-Mail |
+| Database | SQLite (via SQLAlchemy) |
+| Data Viz | Matplotlib, Seaborn |
+| ML | scikit-learn |
+| IoT Cloud | ThingSpeak API, Blynk |
+| Frontend | HTML, CSS, JavaScript |
+| AI Advisory | Google Generative AI (Gemini) |
+
+### Running the Web App
+
 ```bash
+# 1. Clone the repository
+git clone https://github.com/khalod55tat-dev/capstone_project.git
+cd capstone_project
+
+# 2. Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # Linux/Mac
+
+# 3. Install dependencies
 pip install -r requirements.txt
-```
 
-3. Set up environment variables:
-```bash
-# For Windows
-set SECRET_KEY=your_secret_key
-set ADMIN_KEY=Vasu@123
+# 4. Set up environment variables
+# Create a .env file with:
+THINGSPEAK_CHANNEL_ID=your_channel_id
+THINGSPEAK_READ_API_KEY=your_read_key
+THINGSPEAK_API_KEY=your_write_key
+SECRET_KEY=your_secret_key
 
-# For Unix/Linux
-export SECRET_KEY=your_secret_key
-export ADMIN_KEY=Vasu@123
-```
-
-## Configuration
-
-1. ThingSpeak Configuration:
-   - Update `THINGSPEAK_CHANNEL_ID` and `THINGSPEAK_READ_API_KEY` in `app.py`
-   - Configure your IoT sensors to send data to ThingSpeak
-
-2. ML Model:
-   - Place your trained model file at `wqi_model.pkl`
-   - Place your scaler file at `scaler.pkl`
-
-## Running the Application
-
-1. Initialize the database:
-```bash
+# 5. Initialize database
+flask db init
+flask db migrate
 flask db upgrade
+
+# 6. Run the app
+python website.py
 ```
 
-2. Run the application:
-```bash
-python app.py
-```
+Then open `http://localhost:5000` in your browser.
 
-The application will be available at `http://localhost:5000`
+---
 
-## Project Structure
+## 📊 Water Quality Parameters & Safe Ranges
 
-```
-project/
-├── app.py              # Main application file
-├── requirements.txt    # Python dependencies
-├── Procfile           # Railway deployment configuration
-├── users.db           # SQLite database
-├── static/            # Static files (CSS, JS, images)
-└── templates/         # HTML templates
-```
+| Parameter | Safe Range | Unit |
+|-----------|-----------|------|
+| pH | 6.5 – 8.5 | — |
+| Turbidity | < 5 | NTU |
+| TDS | < 500 | mg/L |
 
-## API Endpoints
+---
 
-- `/`: Home page
-- `/water_quality`: Real-time monitoring dashboard
-- `/get_latest_data`: API endpoint for sensor data
-- `/admin/dashboard`: Admin configuration panel
-- `/login`, `/register`, `/logout`: Authentication endpoints
+## 🧪 Testing Results
 
-## Contributing
+| Metric | Result |
+|--------|--------|
+| pH accuracy | ±0.04 pH (buffer solution test) |
+| Sensor stabilization | 5–30 seconds |
+| Purification output | ~5 litres / 15 minutes |
+| Data transmission | Near real-time (via Blynk) |
+| System stability | Stable after hardware improvements |
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+---
 
-## Acknowledgments
+## 🌱 SDG Contributions
 
-- ThingSpeak for IoT platform
-- Flask framework
-- Railway for hosting platform 
+- **SDG 6** — Clean Water and Sanitation: Provides safe, verifiable drinking water for off-grid communities
+- **SDG 7** — Affordable and Clean Energy: Fully solar-powered with zero grid dependency
+
+---
+
+## 🔮 Future Work
+
+- Integrate **LoRaWAN** for connectivity in deep rural areas without Wi-Fi
+- Add **automated pressure sensors** and flow control valves
+- Expand ML model for predictive maintenance alerts
+
+---
+
+## 📄 License
+
+This project was developed as part of the EECS2026 Capstone Program at Universiti Teknologi Malaysia. For academic and educational use.
+
+---
+
+*"A reliable, solar-powered system with smart IoT monitoring — delivering safe, affordable, and eco-friendly drinking water."*
