@@ -1,5 +1,5 @@
 
-[README.md](https://github.com/user-attachments/files/26620126/README.md)
+
 # 🌊 Solar-Powered IoT Water Quality Monitoring and Advisory System
 
 > **🏆 Winner — Best Theme Project (Communication Theme Award) | EECS2026 Capstone Showcase, UTM**
