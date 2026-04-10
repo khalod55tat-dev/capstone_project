@@ -31,7 +31,10 @@ from email.mime.multipart import MIMEMultipart
 
 # Load environment variables from .env file
 load_dotenv()
-
+THINGSPEAK_CHANNEL_ID = os.getenv("THINGSPEAK_CHANNEL_ID")
+THINGSPEAK_READ_API_KEY = os.getenv("THINGSPEAK_READ_API_KEY")
+THINGSPEAK_API_KEY = os.getenv("THINGSPEAK_API_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 app = Flask(__name__)
 
 # Use environment variable for secret key
