@@ -6,20 +6,6 @@
 
 A portable, energy-independent water quality monitoring system built for off-grid and rural communities. The system combines solar power, multi-stage water purification, UV sterilization, and real-time IoT monitoring via an ESP32 microcontroller — all accessible through a web dashboard and mobile app.
 
----
-
-## 👥 Team — Group C2G04
-
-| Name | Role |
-|------|------|
-| Mohamad Harith Bin Azhar | Hardware & System Design |
-| Nazhan Ilham Bin Ahmad Zabidi | IoT & Embedded Systems |
-| Teoh Di Wei | Circuit & PCB Design |
-| Khalid Ahmed Elzubair Ahmed | Web Application & Backend |
-
-**Facilitator:** Dr. Nurul Ashikin Binti Daud  
-**Institution:** Universiti Teknologi Malaysia (UTM), Skudai, Johor  
-**Theme:** Affordable & Clean Energy (SDG 6 & SDG 7)
 
 ---
 
@@ -160,42 +146,9 @@ Built with **Python Flask**, the web dashboard provides:
 | ML | scikit-learn |
 | IoT Cloud | ThingSpeak API, Blynk |
 | Frontend | HTML, CSS, JavaScript |
-| AI Advisory | Google Generative AI (Gemini) |
 
-### Running the Web App
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/khalod55tat-dev/capstone_project.git
-cd capstone_project
 
-# 2. Create and activate virtual environment
-python -m venv venv
-venv\Scripts\activate        # Windows
-source venv/bin/activate     # Linux/Mac
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Set up environment variables
-# Create a .env file with:
-THINGSPEAK_CHANNEL_ID=your_channel_id
-THINGSPEAK_READ_API_KEY=your_read_key
-THINGSPEAK_API_KEY=your_write_key
-SECRET_KEY=your_secret_key
-
-# 5. Initialize database
-flask db init
-flask db migrate
-flask db upgrade
-
-# 6. Run the app
-python website.py
-```
-
-Then open `http://localhost:5000` in your browser.
-
----
 
 ## 📊 Water Quality Parameters & Safe Ranges
 
