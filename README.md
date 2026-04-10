@@ -3,6 +3,7 @@
 # 🌊 Solar-Powered IoT Water Quality Monitoring and Advisory System
 
 > **🏆 Winner — Best Theme Project (Communication Theme Award) | EECS2026 Capstone Showcase, UTM**
+![WhatsApp Image 2026-04-10 at 12 51 58 PM](https://github.com/user-attachments/assets/9b332de8-badf-480e-99e5-c62cda85a4fd)
 
 A portable, energy-independent water quality monitoring system built for off-grid and rural communities. The system combines solar power, multi-stage water purification, UV sterilization, and real-time IoT monitoring via an ESP32 microcontroller — all accessible through a web dashboard and mobile app.
 
